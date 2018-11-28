@@ -1,32 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 
-namespace Brezenhem
+namespace BrezenhemConsole
 {
-    public partial class Form1 : Form
+    class Program
     {
         private const int size = 32;
-        private bool[,] _matrix = new bool[size, size];
-        private Graphics graphics;
-        private Bitmap img; 
-
-        public Form1()
-        {
-            InitializeComponent();
-
-            img = new Bitmap(pictureBox1.Width, pictureBox1.Height);
-            pictureBox1.Image = img;
-            graphics = Graphics.FromImage(img);
-            ShowGrid(graphics);
-        }
-
+        private static bool[,] _matrix = new bool[size, size];
         private void ResetMatrix()
         {
             for (int i = 0; i < size; i++)
@@ -38,31 +21,25 @@ namespace Brezenhem
             }
         }
 
-        private void ShowMatrix(Graphics g)
+        private static void ShowMatrix()
         {
             for (int i = 0; i < size; i++)
             {
                 for (int j = 0; j < size; j++)
                 {
-                    if (_matrix[i, j])
-                    {
-                        g.FillRectangle(Brushes.Black, i*20, j*20, 20, 20);
-                    }
-                    else
-                    {
-                        g.FillRectangle(Brushes.White, i * 20, j * 20, 20, 20);
-                    }
+                    Console.Write((_matrix[i, j]?1:0) + " ");
                 }
+                Console.WriteLine();
             }
         }
 
-        private int Sign(int x)
+        private static int Sign(int x)
         {
             return (x > 0) ? 1 : (x < 0) ? -1 : 0;
             //возвращает 0, если аргумент (x) равен нулю; -1, если x < 0 и 1, если x > 0.
         }
 
-        public void DrawBresenhamLine(int xstart, int ystart, int xend, int yend)
+        public static void DrawBresenhamLine(int xstart, int ystart, int xend, int yend)
         /**
          * xstart, ystart - начало;
          * xend, yend - конец; 
@@ -114,7 +91,7 @@ namespace Brezenhem
             err = el / 2;
             _matrix[x, y] = true;
             //g.DrawLine(new Pen(Brushes.Black), x, y, x, y);//ставим первую точку
-                                   //все последующие точки возможно надо сдвигать, поэтому первую ставим вне цикла
+            //все последующие точки возможно надо сдвигать, поэтому первую ставим вне цикла
 
             for (int t = 0; t < el; t++)//идём по всем точкам, начиная со второй и до последней
             {
@@ -136,52 +113,18 @@ namespace Brezenhem
             }
         }
 
-        private void ShowGrid(Graphics g)
+        static void Main(string[] args)
         {
-            for (int i = 0; i < 32; i++)
-            {
-                g.DrawLine(new Pen(Color.DarkGray), 0, i * 20, 640, i*20);
-                g.DrawLine(new Pen(Color.DarkGray), i * 20, 0, i * 20, 640);
-            }
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            ResetMatrix();
-
-            var x0 = int.Parse(textBox1.Text);
-            var y0 = int.Parse(textBox2.Text);
-            var x1 = int.Parse(textBox3.Text);
-            var y1 = int.Parse(textBox4.Text);
-
+            Console.Write("Enter x0: ");
+            var x0 = int.Parse(Console.ReadLine());
+            Console.Write("Enter y0: ");
+            var y0 = int.Parse(Console.ReadLine());
+            Console.Write("Enter x1: ");
+            var x1 = int.Parse(Console.ReadLine());
+            Console.Write("Enter y1: ");
+            var y1 = int.Parse(Console.ReadLine());
             DrawBresenhamLine(x0, y0, x1, y1);
-
-            pictureBox1.Image = img;
-
-            ShowMatrix(graphics);
-            //Fulfil(10, 15, 15, graphics);
-            pictureBox1.Image = img;
-            ShowGrid(graphics);
+            ShowMatrix();
         }
-
-        public void Fulfil(int radius, int x, int y, Graphics g)
-        {
-            // (x-x0)^2 +(y-y0)^2 = r^2
-            
-            for (int i = 0; i < size; i++)
-            {
-                for (int j = 0; j < size; j++)
-                {
-                    if (Math.Abs((x-i)*(x-i) + (y - j)*(y - j) - radius*radius) < 10)
-                    {
-                        DrawBresenhamLine(x, y, i, j);
-                    }
-                }
-            }
-
-            ShowMatrix(g);
-        }
-
-
     }
 }
