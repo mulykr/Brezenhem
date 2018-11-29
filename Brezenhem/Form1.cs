@@ -132,7 +132,7 @@ namespace Brezenhem
                 pictureBox1.Image = _img;
 
                 ShowMatrix(_graphics);
-                Fulfil(15, 15, 15, _graphics);
+                //Fulfil(15, 15, 15, _graphics);
                 pictureBox1.Image = _img;
                 ShowGrid(_graphics);
             }
